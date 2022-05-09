@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TM</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/styles/style.css}"/>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
+            integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
+            integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
+            crossorigin="anonymous"></script>
+
+    <script
+            src="http://code.jquery.com/jquery-3.3.1.min.js"
+            integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+            crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
+    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+</head>
+<body>
+<div th:replace="fragments :: navbar"></div>
+
+<h1 th:text="${department.getName()}"></h1>
+
+<div class="departmentTasksTable">
+    <h2>Дедлайны</h2>
+    <table class="table" id="departmentTable1">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>Заголовок</th>
+            <th>Статус</th>
+            <th>Срочность</th>
+            <th>Ответственный</th>
+            <th>Срок</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="task: ${deadlineTasks}">
+            <td th:text="${task.id}" th:onclick="'javascript:rowClicked(\'' + ${task.id} + '\');'"
+                style="cursor: pointer"></td>
+            <td th:text="${task.name}" th:onclick="'javascript:rowClicked(\'' + ${task.id} + '\');'"
+                style="cursor: pointer"></td>
+            <td th:text="${task.status.name}" th:onclick="'javascript:rowClicked(\'' + ${task.id} + '\');'"
+                style="cursor: pointer"></td>
+            <td th:text="${task.urgency.name}" th:onclick="'javascript:rowClicked(\'' + ${task.id} + '\');'"
+                style="cursor: pointer"></td>
+            <td th:text="${task?.responsible?.fullName}"
+                th:onclick="'javascript:rowClicked(\'' + ${task.id} + '\');'" style="cursor: pointer"></td>
+            <td th:text="${#dates.format(task.deadline, 'dd.MM.yyyy')}"
+                th:onclick="'javascript:rowClicked(\'' + ${task.id} + '\');'" style="cursor: pointer"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div class="departmentTasksTable">
+    <h2>Нераспределенные задачи отдела</h2>
+    <table class="table" id="departmentTable2">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>Заголовок</th>
+            <th>Статус</th>
+            <th>Срочность</th>
+            <th>Отдел инициатора</th>
+            <th>Срок</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="task: ${unallocatedTasks}">
+            <td th:text="${task.id}" th:onclick="'javascript:rowClicked(\'' + ${task.id} + '\');'"
+                style="cursor: pointer"></td>
+            <td th:text="${task.name}" th:onclick="'javascript:rowClicked(\'' + ${task.id} + '\');'"
+                style="cursor: pointer"></td>
+            <td th:text="${task.status.name}" th:onclick="'javascript:rowClicked(\'' + ${task.id} + '\');'"
+                style="cursor: pointer"></td>
+            <td th:text="${task.urgency.name}" th:onclick="'javascript:rowClicked(\'' + ${task.id} + '\');'"
+                style="cursor: pointer"></td>
+            <td th:text="${task.proponentDepartment.name}"
+                th:onclick="'javascript:rowClicked(\'' + ${task.id} + '\');'" style="cursor: pointer"></td>
+            <td th:text="${#dates.format(task.deadline, 'dd.MM.yyyy')}"
+                th:onclick="'javascript:rowClicked(\'' + ${task.id} + '\');'" style="cursor: pointer"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div class="departmentEmployeeTable">
+    <h2>Сотрудники отдела</h2>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>ФИО</th>
+            <th>Активен</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="employee: ${employees}">
+            <td th:text="${employee.fullName}" style="cursor: pointer"
+                th:onclick="'javascript:rowClickedEmployee(\'' + ${employee.id} + '\');'"></td>
+            <td th:text="${employee.getActiveStatus()} ? 'Да' : 'Нет'" style="cursor: pointer"
+                th:onclick="'javascript:rowClickedEmployee(\'' + ${employee.id} + '\');'"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div id="chart_div"></div>
+<div id="piechart"></div>
+<script th:inline="javascript">
+    var real_data = /*[[${chartData}]]*/'noValue';
+    $(document).ready(function () {
+        google.charts.load('current', {
+            packages: ['corechart', 'bar']
+        });
+        google.charts.setOnLoadCallback(drawColumnChart);
+        google.charts.setOnLoadCallback(drawPieChart);
+    });
+
+    function drawColumnChart() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Сотрудники');
+        data.addColumn('number', 'Задачи');
+        Object.keys(real_data).forEach(function (key) {
+            data.addRow([key, real_data[key]]);
+        });
+        var options = {
+            title: 'Загруженность',
+            hAxis: {
+                title: 'Сотрудники',
+            },
+            vAxis: {
+                title: 'Количество'
+            }
+        };
+        var chart = new google.visualization.ColumnChart(document
+            .getElementById('chart_div'));
+        chart.draw(data, options);
+    }
+
+    function drawPieChart() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Сотрудники');
+        data.addColumn('number', 'Количество');
+        Object.keys(real_data).forEach(function (key) {
+            data.addRow([key, real_data[key]]);
+        });
+        var options = {
+            title: 'Загруженность'
+        };
+        var chart = new google.visualization.PieChart(document
+            .getElementById('piechart'));
+        chart.draw(data, options);
+    }
+
+    $(document).ready(function () {
+        $('#departmentTable1, #departmentTable2').DataTable({
+            pageLength: 4,
+            order: false,
+            searching: false,
+            ordering: false,
+            bLengthChange: false,
+            language: {
+                "emptyTable": "Задач нет",
+                "lengthMenu": "Отоброжать _MENU_ записей на страницу",
+                "zeroRecords": "Задач по данному фильтру не найдено",
+                "info": "Страница _PAGE_ из _PAGES_",
+                "infoEmpty": "Страница 0 из 0",
+                "search": "Поиск",
+                "paginate": {
+                    "next": '&#8594;',
+                    "previous": '&#8592;'
+                }
+            }
+        });
+    });
+
+    function rowClickedEmployee(value) {
+        location.href = "/Profile/" + value;
+    }
+
+    function rowClicked(value) {
+        location.href = "/tasks/" + value;
+    }
+</script>
+</body>
+</html>

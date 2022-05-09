@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TM</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/styles/style.css}"/>
+</head>
+<body>
+<div th:replace="fragments :: navbar"></div>
+<div class="container">
+    <h1>Создать задачу</h1>
+
+    <form th:action="@{add}" method="post" enctype="multipart/form-data">
+        <div class="row">
+            <div class="column">
+                <ul>
+                    <li>
+                        <p class="column_p">Заголовок:</p>
+                        <input name="header" type="text" class="column_text_input" th:maxlength="150" required="required"
+                               placeholder="Заголовок задачи"/>
+                    </li>
+                    <li>
+                        <p class="column_p">Отдел: </p>
+                        <select th:name="responsibleDepartment" id="responsibleDepartment" required="required">
+                            <option value="">- - -</option>
+                            <option th:each="department : ${departments}"
+                                    th:value="${department.id}"
+                                    th:text="${department.name}"></option>
+                        </select>
+                    </li>
+                    <li>
+                        <p class="column_p">Ответственный:</p>
+                        <select th:name="responsible" id="responsible">
+                            <option value="">- - -</option>
+                        </select>
+                    </li>
+                    <li>
+                        <input th:name="file" type="file" placeholder="Upload" class="fileUploader"/>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="column">
+                <ul>
+                    <li>
+                        <p class="column_p">Срочность:</p>
+                        <select th:name="urgency" required="required">
+                            <option value="">- - -</option>
+                            <option th:each="ur : ${urgency}"
+                                    th:value="${ur.id}"
+                                    th:text="${ur.name}"></option>
+                        </select>
+                    </li>
+                    <li>
+                        <p class="column_p">Срок выполнения:</p>
+                        <input th:name="deadline" type="date" id="deadline" class="date_input"
+                               th:attr="min=${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}">
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="message_answer">
+            <textarea name="message" id="message" th:maxlength="2000" placeholder="Текст сообщения"
+                      th:required="required"></textarea>
+        </div>
+
+        <input type="submit" value="Создать задачу" id="sendButton"/>
+    </form>
+</div>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    var employees = [[${depEmpMap}]];
+    /*]]>*/
+
+    var main = document.getElementById('responsibleDepartment');
+    var sub = document.getElementById('responsible');
+
+    main.addEventListener('change', function () {
+        var selected_option = employees[this.value];
+
+        while (sub.options.length > 0) {
+            sub.options.remove(0);
+        }
+
+        let option = new Option("- - -", "");
+        sub.appendChild(option);
+
+        Object.keys(selected_option).map(function (key2, index2) {
+            let option = new Option(selected_option[key2], key2);
+            sub.appendChild(option);
+        });
+
+        Array.from(selected_option).forEach(function (el) {
+            let option = new Option(el, el);
+            sub.appendChild(option);
+        });
+    });
+</script>
+</body>
+</html>

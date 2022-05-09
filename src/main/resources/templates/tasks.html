@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>TM</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/styles/style.css}"/>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
+            integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
+            integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
+            crossorigin="anonymous"></script>
+
+    <script
+            src="http://code.jquery.com/jquery-3.3.1.min.js"
+            integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+            crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
+    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+</head>
+<body>
+<div th:replace="fragments :: navbar"></div>
+<div class="container">
+    <h1>Задачи</h1>
+    <p th:text="'Количество задач: ' + ${tasks.size()}" class="container--label"></p>
+
+    <form method="get" action="all">
+        <div class="row">
+            <div class="column">
+                <ul>
+                    <li>
+                        <p class="column_p">Срочность:</p>
+                        <select th:name="urgency">
+                            <option value="">- - -</option>
+                            <option th:each="ur : ${urgency}"
+                                    th:value="${ur.id}"
+                                    th:text="${ur.name}"
+                                    th:selected=${ur.id==urgencyFilter}></option>
+                        </select>
+                    </li>
+                    <li>
+                        <p class="column_p">Статус:</p>
+                        <select th:name="status">
+                            <option value="">- - -</option>
+                            <option th:each="st : ${status}"
+                                    th:value="${st.id}"
+                                    th:text="${st.name}"
+                                    th:selected=${st.id==statusFilter}></option>
+                        </select>
+
+                    </li>
+                    <li>
+                        <p class="column_p">Отдел инициатора:</p>
+                        <select th:name="proponentDepartment">
+                            <option value="">- - -</option>
+                            <option th:each="department : ${departments}"
+                                    th:value="${department.id}"
+                                    th:text="${department.name}"
+                                    th:selected=${department.id==proponentDepartmentFilter}></option>
+                        </select>
+
+                    </li>
+                </ul>
+            </div>
+            <div class="column">
+                <ul>
+                    <li>
+                        <p class="column_p">Отдел исполнителя:</p>
+                        <select th:name="responsibleDepartment">
+                            <option value="">- - -</option>
+                            <option th:each="department : ${departments}"
+                                    th:value="${department.id}"
+                                    th:text="${department.name}"
+                                    th:selected=${department.id==responsibleDepartmentFilter}></option>
+                        </select>
+
+                    </li>
+                    <li>
+                        <p class="column_p">ID задачи:</p>
+                        <input name="taskId" type="number" class="column_text_input" th:value="${taskId}"/>
+                    </li>
+                    <li>
+                        <input type="submit" value="Найти" class="column_button_left"/>
+                        <input type="button" value="Сбросить" th:onclick="'window.location.href=\'/tasks/all\''"
+                               class="column_button_right"/>
+                    </li>
+
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </form>
+</div>
+
+<table class="table" id="TasksTable">
+    <thead>
+    <tr>
+        <th>#</th>
+        <th>Заголовок</th>
+        <th>Статус</th>
+        <th>Срочность</th>
+        <th>Ответственный</th>
+        <th>Исполняющий отдел</th>
+        <th>Инициатор</th>
+        <th>Отдел инициатора</th>
+        <th>Срок</th>
+        <th>Последний ответ</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="task: ${tasks}">
+        <td>
+            <div th:if="${#lists.contains(favorites, task)}">
+                <img th:src="@{/images/star_active.png}" width="17 px" height="17 px"
+                     th:onclick="'javascript:favorites(\'' + ${task.id} + '\');'"/>
+            </div>
+            <div th:unless="${#lists.contains(favorites, task)}">
+                <img th:src="@{/images/star_not_active.png}" width="17 px" height="17 px"
+                     th:onclick="'javascript:favorites(\'' + ${task.id} + '\');'"/>
+            </div>
+
+            <p th:text="${task.id}"></p>
+        </td>
+        <td th:text="${task.name}" style="cursor: pointer"
+            th:onclick="'javascript:rowClicked(\'' + ${task.id} + '\');'"></td>
+        <td th:text="${task.status.name}" style="cursor: pointer"
+            th:onclick="'javascript:rowClicked(\'' + ${task.id} + '\');'"></td>
+        <td th:text="${task.urgency.name}" style="cursor: pointer"
+            th:onclick="'javascript:rowClicked(\'' + ${task.id} + '\');'"></td>
+        <td th:text="${task?.responsible?.fullName}" style="cursor: pointer"
+            th:onclick="'javascript:rowClicked(\'' + ${task.id} + '\');'"></td>
+        <td th:text="${task.responsibleDepartment.name}" style="cursor: pointer"
+            th:onclick="'javascript:rowClicked(\'' + ${task.id} + '\');'"></td>
+        <td th:text="${task.proponent.fullName}" style="cursor: pointer"
+            th:onclick="'javascript:rowClicked(\'' + ${task.id} + '\');'"></td>
+        <td th:text="${task.proponentDepartment.name}" style="cursor: pointer"
+            th:onclick="'javascript:rowClicked(\'' + ${task.id} + '\');'"></td>
+        <td th:text="${#dates.format(task.deadline, 'dd.MM.yyyy')}" style="cursor: pointer"
+            th:onclick="'javascript:rowClicked(\'' + ${task.id} + '\');'"></td>
+        <td th:text="${#dates.format(task.lastAnswer, 'dd.MM.yyyy HH:mm')}" style="cursor: pointer"
+            th:onclick="'javascript:rowClicked(\'' + ${task.id} + '\');'"></td>
+    </tr>
+    </tbody>
+</table>
+<script>
+    function rowClicked(value) {
+        location.href = "/tasks/" + value;
+    }
+
+    $(document).ready(function () {
+        $('img').click(function () {
+            if ($(this).attr('src') == '/images/star_active.png') {
+                $(this).attr('src', '/images/star_not_active.png');
+            } else {
+                $(this).attr('src', '/images/star_active.png')
+            }
+        })
+    })
+
+    $(document).ready(function () {
+        $('#TasksTable').DataTable({
+            pageLength: 7,
+            order: false,
+            searching: false,
+            ordering: false,
+            bLengthChange: false,
+            language: {
+                "emptyTable": "Задач нет",
+                "lengthMenu": "Отоброжать _MENU_ записей на страницу",
+                "zeroRecords": "Задач нет",
+                "info": "Страница _PAGE_ из _PAGES_",
+                "infoEmpty": "Страница 0 из 0",
+                "paginate": {
+                    "next": '&#8594;',
+                    "previous": '&#8592;'
+                }
+            }
+        });
+    });
+
+    function favorites(value) {
+        $.ajax({
+            type: 'POST',
+            url: '/tasks/toggleFavorites',
+            data: {
+                taskId: value
+            }
+        });
+    }
+</script>
+</body>
+</html>

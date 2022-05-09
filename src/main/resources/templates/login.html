@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+<head>
+    <meta charset="UTF-8">
+    <title>TM</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/styles/style.css}"/>
+</head>
+<body>
+<div class="lf--body">
+    <div th:if="${param.error}">
+        <p class="lf--p">Неверный логин или пароль.</p>
+    </div>
+    <form th:action="@{/login}" method="post" class='login-form'>
+        <div class="flex-row">
+            <input type="text" name="username" class='lf--input' placeholder='Логин'/>
+        </div>
+        <div class="flex-row">
+            <input type="password" name="password" class='lf--input' placeholder='Пароль'/>
+        </div>
+        <input type="submit" value="Войти" class='lf--submit'/>
+    </form>
+</div>
+</body>
+</html>

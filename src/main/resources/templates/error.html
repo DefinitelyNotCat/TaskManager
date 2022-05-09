@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TM</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/styles/style.css}"/>
+</head>
+<body>
+<div th:replace="fragments :: navbar"/>
+<div id="main">
+    <div class="fof">
+        <div th:if="${header != null}">
+            <h1 id="fof_h1" th:text="${header}"></h1>
+        </div>
+        <div th:if="${message != null}">
+            <p id="fof_p" th:text="${message}"></p>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TM</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/styles/style.css}"/>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
+            integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
+            integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
+            crossorigin="anonymous"></script>
+
+    <script
+            src="http://code.jquery.com/jquery-3.3.1.min.js"
+            integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+            crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
+    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+</head>
+</head>
+<body>
+<div th:replace="fragments :: navbar"></div>
+<div class="departmentEmployeeTable">
+    <h2>Информация о сотруднике</h2>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Аттрибут</th>
+            <th>Значение</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>
+                <ul>
+                    <li>ФИО</li>
+                    <li>Активен</li>
+                    <li>Электронная почта</li>
+                    <li>Уведомления на почту</li>
+                    <li>Уровень доступа</li>
+                    <li>Отдел</li>
+                </ul>
+            </td>
+            <td>
+                <ul>
+                    <li th:text="${employee.fullName}"></li>
+                    <li th:text="${employee.getActiveStatus()} ? 'Да' : 'Нет'"></li>
+                    <li th:text="${employee.email}"></li>
+                    <li th:text="${employee.getNotificationStatus()} ? 'Включены' : 'Отключены'" id="liNotification"></li>
+                    <li th:text="${employee.userAccess.name}"></li>
+                    <li th:text="${employee.department.name}"></li>
+                </ul>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <input type="button" th:name="toggleIsActive"
+           th:value="${employee.getNotificationStatus()} ? 'Отключить уведомления на почту' : 'Включить уведомления на почту'"
+           th:if="${user.getId() == employee.getId()}"
+           th:onclick="'javascript:toggleNotification(\'' + ${employee.id} + '\');'" id="toggleNotification"/>
+</div>
+
+<div id="chart_div"></div>
+<script th:inline="javascript">
+    var real_data = /*[[${chartData}]]*/'noValue';
+    google.charts.load('current', {'packages': ['corechart']});
+    google.charts.setOnLoadCallback(drawChart);
+
+    function drawChart() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Дата');
+        data.addColumn('number', 'Сообщения');
+        Object.keys(real_data).forEach(function (key) {
+            data.addRow([key, real_data[key]]);
+        });
+
+        var options = {
+            title: 'Сообщения',
+            hAxis: {
+                title: 'Дата',
+            },
+            vAxis: {
+                title: 'Количество'
+            }
+        };
+        var chart = new google.visualization.AreaChart(document.getElementById('chart_div'));
+        chart.draw(data, options);
+    }
+
+    function toggleNotification(value) {
+        $.ajax({
+            type: 'POST',
+            url: '/Profile/toggleNotification',
+            data: {
+                employeeId: value
+            }
+        });
+        var element1 = document.getElementById("toggleNotification");
+        var element2 = document.getElementById("liNotification");
+        if (element1.value == "Включить уведомления на почту") {
+            element1.value = "Отключить уведомления на почту";
+        } else {
+            element1.value = "Включить уведомления на почту";
+        }
+
+        if (element2.innerText == "Включены") {
+            element2.innerText = "Отключены";
+        } else {
+            element2.innerText = "Включены";
+        }
+    }
+
+    $(document).ready(function () {
+        $("toggleNotification").click(function () {
+            if ($(this).value == 'Включить уведомления на почту') {
+                $(this).value('src', 'Отключить уведомления на почту');
+            } else {
+                $(this).value('src', 'Включить уведомления на почту')
+            }
+        })
+    })
+</script>
+</body>
+</html>

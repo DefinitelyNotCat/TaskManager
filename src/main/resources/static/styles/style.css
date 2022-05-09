@@ -1,0 +1,708 @@
+/*-----------------
+Base
+ ----------------*/
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+}
+
+html, body {
+    max-width: 100%;
+    min-width: 1300px;
+}
+
+p {
+    font-family: sans-serif;
+}
+
+a {
+    text-decoration: none;
+}
+
+h1 {
+    color: #333333;
+    padding: 20px 20px 20px 100px;
+    font-family: "Poppins", sans-serif;
+}
+
+h2 {
+    color: #333333;
+    padding: 15px 20px;
+    font-family: "Poppins", sans-serif;
+}
+
+li {
+    list-style: none;
+}
+
+.main {
+    font-family: "Poppins", sans-serif;
+}
+
+/*-----------------
+Login Form
+ ----------------*/
+.lf--body {
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    position: absolute;
+    top: 0; left: 0;
+    height: 100%; width: 100%;
+
+    background: linear-gradient(
+            #CCCCCC,
+            #DDDDDD
+    );
+    font-family: 'Roboto', helvetica, arial, sans-serif;
+    font-size: 1.5em;
+}
+
+.lf--p {
+    color: #333333;
+    font-size: 22px;
+}
+
+.login-form {
+    width: 100%;
+    padding: 2em;
+    position: relative;
+    width: 20em;
+}
+
+.flex-row {
+    display: flex;
+    margin-bottom: 1em;
+}
+
+.lf--input {
+    flex: 1;
+    padding: 1em;
+    border: 0;
+    color: #4d4a4a;
+    font-size: 1rem;
+}
+
+.lf--submit {
+    display: block;
+    padding: 1em;
+    width: 100%;
+    border: 0;
+    color: #fff;
+    background-color: #4d4a4a;
+    cursor: pointer;
+    font-size: .75em;
+    font-weight: 600;
+}
+
+/*-----------------
+Navigation Bar
+ ----------------*/
+.navB input {
+    font-size: 1em;
+    margin: 20px;
+    padding: 0 0;
+    outline: none;
+    background: #333333;
+    border: #333333;
+    color: #EEEEEE;
+}
+
+.navB input:hover {
+    color: #469DFF;
+    transition: 0.2s;
+    cursor: pointer;
+}
+
+header{
+    z-index: 999;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #333333;
+    padding: 0 25px;
+    font-family: "Poppins", sans-serif;
+}
+
+header .logo{
+    color: #EEEEEE;
+    font-size: 1.8em;
+    font-weight: 700;
+    text-transform: uppercase;
+    text-decoration: none;
+    letter-spacing: 2px;
+}
+
+header .navigation{
+    position: relative;
+    line-height: 60px;
+    transition-property: line-height;
+}
+
+header.sticky .navigation{
+    line-height: 60px;
+}
+
+header .navigation .menu{
+    position: relative;
+    display: flex;
+    justify-content: center;
+    list-style: none;
+    user-select: none;
+}
+
+.menu-item > a{
+    color: #EEEEEE;
+    font-size: 1em;
+    text-decoration: none;
+    margin: 30px;
+    padding: 25px 0;
+}
+
+.menu-item > a:hover{
+    color: #469DFF;
+    transition: 0.2s;
+}
+
+.menu-item .sub-menu{
+    position: absolute;
+    background: #333333;
+    top: 59px;
+    line-height: 40px;
+    list-style: none;
+    border-radius: 0 0 8px 8px;
+    pointer-events: none;
+    /*transform: translateY(20px);*/
+    opacity: 0;
+    transition: 0.1s;
+    transition-property: transform, opacity;
+    z-index:998;
+}
+
+header.sticky .menu-item .sub-menu{
+    top: 60px;
+}
+
+.menu-item:hover .sub-menu{
+    pointer-events: all;
+    transform: translateY(0);
+    opacity: 1;
+}
+
+.menu-item .sub-menu .sub-item{
+    position: relative;
+    padding: 7px 0;
+    cursor: pointer;
+    box-shadow: inset 0px -30px 5px -30px rgba(255, 255, 255, 0.2);
+}
+
+.menu-item .sub-menu .sub-item a{
+    color: #EEEEEE;
+    font-size: 1em;
+    text-decoration: none;
+    padding: 15px 30px;
+}
+
+.menu-item .sub-menu .sub-item:hover{
+    background: #4080EF;
+}
+
+.menu-item .sub-menu .sub-item:last-child:hover{
+    border-radius: 0 0 8px 8px;
+}
+
+.more .more-menu{
+    position: absolute;
+    background: #333333;
+    list-style: none;
+    top: 0;
+    left: 100%;
+    white-space: nowrap;
+    border-radius: 0 8px 8px 8px;
+    overflow: hidden;
+    pointer-events: none;
+    transform: translateY(20px);
+    opacity: 0;
+    transition: 0.3s;
+    transition-property: transform, opacity;
+}
+
+.more:hover .more-menu{
+    pointer-events: all;
+    transform: translateY(0);
+    opacity: 1;
+}
+
+.more .more-menu .more-item{
+    padding: 7px 0;
+    box-shadow: inset 0px -30px 5px -30px rgba(255, 255, 255, 0.2);
+    transition: 0.3s;
+}
+
+.more .more-menu .more-item:hover{
+    background: #4080EF;
+}
+
+.menu-btn{
+    display: none;
+    text-align: center;
+}
+
+/*-----------------
+Container
+ ----------------*/
+.container {
+    position: relative;
+    width: 80rem;
+    border: 1px solid #DDDDDD;
+    box-shadow: 0 0 0.2em 0 rgba(0, 0, 0, 0.2);
+    border-collapse: collapse;
+    margin: 35px auto 20px;
+    background-color: #f3f3f3;
+    padding-top: 15px;
+}
+
+.container--label {
+    font-size: 18px;
+    color: #333333;
+    display: inline-block;
+    margin-left: 64px;
+}
+
+.container p {
+    font-size: 18px;
+    color: #333333;
+    display: inline-block;
+}
+
+.container h3 {
+    padding-left: 20px;
+    padding-top: 20px;
+    font-size: 22px;
+    padding-bottom: 15px;
+    font-family: "Poppins", sans-serif;
+    color: #333333;
+}
+
+.column {
+    float: left;
+    width: auto;
+    padding: 10px;
+}
+
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.column li {
+    padding: 10px 5px 10px 5px;
+}
+
+.column_p {
+    width: 180px;
+    margin-left: 50px;
+    padding-right: 10px;
+}
+
+.message {
+    width: auto;
+    margin-left: 50px;
+    padding-right: 10px;
+}
+
+.column li p{
+    margin-left: 50px;
+}
+
+.column_text_input {
+    width: 250px;
+    height: 2em;
+    padding: 0px 6px;
+    margin-left: 10px;
+    box-sizing: border-box;
+    border: 2px solid #ccc;
+    border-radius: 2px;
+    background-color: white;
+    font-size: 16px;
+    color: #333333;
+    resize: none;
+}
+
+.column_button_left {
+    margin-left: 50px;
+    font-size: 16px;
+    color: #333333;
+    padding: 2px 4px;
+}
+
+.column_button_right {
+    margin-left: 10px;
+    font-size: 16px;
+    color: #333333;
+    padding: 2px 4px;
+}
+
+/*-----------------
+Table
+ ----------------*/
+.table {
+    width: 100%;
+    margin-bottom: 20px;
+    border-collapse: collapse;
+}
+
+.table th {
+    font-weight: bold;
+    padding: 5px;
+    background: #efefef;
+    border: 1px solid #dddddd;
+}
+
+.table td {
+    border: 1px solid #dddddd;
+    padding: 5px;
+}
+
+.departmentEmployeeTable {
+    width: 40%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.departmentTasksTable {
+    width: 70%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.chartDepartment {
+
+}
+
+#chart_div, #piechart {
+    width: 1300px;
+    height: 500px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.taskInfo {
+    width: 80rem;
+    border: 1px solid #4d4a4a;
+    border-collapse: collapse;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.taskInfo th {
+    font-weight: bold;
+    padding: 5px;
+    background: #DDDDDD;
+    color: #333333;
+    border: 1px solid #CCCCCC;
+    text-align: left;
+    vertical-align: top;
+    font-size: 16px;
+}
+
+.taskInfo td {
+    border: 1px solid #DDDDDD;
+    padding: 5px;
+    background: #EEEEEE;
+    color: #333333;
+    vertical-align: top;
+    font-size: 16px;
+}
+
+/*-----------------
+Button
+ ----------------*/
+.centerButton {
+    width: 80rem;
+    margin-bottom: 20px;
+    border: 1px solid #CCCCCC;
+    border-collapse: collapse;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+#viewLogButton {
+    font-size: 18px;
+    font-family: "Poppins", sans-serif;
+    width: 80rem;
+    border: none;
+    cursor: pointer;
+    color: #333333;
+    background: #EEEEEE;
+}
+
+#viewLogButton:hover {
+    background: #DDDDDD;
+}
+
+.actions_button {
+    display: inline-block;
+    position:absolute;
+    bottom: 0;
+    right: 0;
+    padding-right: 5px;
+}
+
+.actions_button button{
+    border: none;
+    cursor: pointer;
+}
+
+#file-upload-button {
+    background-color: white;
+}
+
+#sendButton {
+    margin-left: 79px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding: 1px 3px;
+    font-size: 16px;
+    font-family: "Poppins", sans-serif;
+    color: #333333;
+}
+
+#closeTaskButton {
+    margin-left: 20px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding: 1px 3px;
+    font-size: 16px;
+    font-family: "Poppins", sans-serif;
+    color: #333333;
+}
+
+#createButton {
+    margin-left: 60px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding: 1px 3px;
+    font-size: 16px;
+    font-family: "Poppins", sans-serif;
+    color: #333333;
+}
+
+#toggleNotification {
+    margin: 0px;
+    padding: 1px 3px;
+    font-size: 16px;
+    font-family: "Poppins", sans-serif;
+    color: #333333;
+}
+
+/*-----------------
+Modal
+ ----------------*/
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    padding-top: 100px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0, 0, 0);
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 40%;
+}
+
+.modal-content p{
+    margin: auto;
+    padding: 9px;
+}
+
+.close {
+    color: #aaaaaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover, .close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/*-----------------
+Messages
+ ----------------*/
+.message_block {
+    width: 75rem;
+    margin-bottom: 20px;
+    border-collapse: collapse;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.message_block h4 {
+    font-weight: bold;
+    padding: 5px;
+    background: #DDDDDD;
+    color: #333333;
+    border: 1px solid #CCCCCC;
+    text-align: left;
+    vertical-align: top;
+    font-size: 16px;
+}
+
+.message_p {
+    border: 1px solid #DDDDDD;
+    background: #EEEEEE;
+    color: #333333;
+    vertical-align: top;
+    font-size: 16px;
+    padding: 10px 20px 10px 20px;
+    overflow-wrap: break-word;
+}
+
+.actions {
+    border: 1px solid #DDDDDD;
+    background: #EEEEEE;
+    color: #333333;
+    font-size: 16px;
+    clear: both;
+    position: relative;
+    padding-top: 7px;
+    padding-bottom: 3px;
+}
+
+.actions_list {
+    display: inline-block;
+}
+
+.actions p {
+    color: #333333;
+    font-size: 16px;
+    padding: 0px 20px 0px 20px;
+}
+
+.message_p a{
+    text-decoration: none;
+    color: grey;
+}
+
+.message_p a:hover{
+    color: #23252B;
+}
+
+.message_answer {
+    width: 70rem;
+    height: auto;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#message {
+    width: 70rem;
+    height: 200px;
+    padding: 12px 20px;
+    box-sizing: border-box;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    background-color: #f8f8f8;
+    font-size: 16px;
+    font-family: "Poppins", sans-serif;
+    color: #333333;
+    resize: none;
+}
+
+/*-----------------
+Inputs
+ ----------------*/
+.container select, .date_input {
+    appearance: none;
+    outline: 0;
+    font-size: 16px;
+    color: #333333;
+    margin-left: 10px;
+    width: auto;
+    height: 2em;
+    padding: 0 1em 0 1em;
+    border: 2px solid #ccc;
+    border-radius: 2px;
+    cursor: pointer;
+    font-family: 'Roboto', helvetica, arial, sans-serif;
+}
+
+.fileUploader {
+    margin-left: 50px;
+    font-size: 16px;
+    font-family: "Poppins", sans-serif;
+    color: #333333;
+}
+
+.checkbox {
+    width: 18px;
+    height: 18px;
+    vertical-align: text-bottom;
+    position: relative;
+}
+
+option {
+    color: inherit;
+}
+
+option:focus {
+     outline: none;
+ }
+
+option::-ms-expand {
+     display: none;
+ }
+
+/*-----------------
+Errors
+ ----------------*/
+#main{
+    display: table;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    font-family: 'Lato', sans-serif;
+    color: #888;
+    margin: 0;
+}
+
+.fof{
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.fof h1{
+    margin-top: 20%;
+    font-size: 50px;
+    display: inline-block;
+    padding: 0px;
+}
+
+.fof p{
+    font-size: 20px;
+    padding: 0px;
+}

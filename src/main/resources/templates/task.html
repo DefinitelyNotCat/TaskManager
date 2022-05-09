@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TM</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/styles/style.css}"/>
+</head>
+<body>
+<div th:replace="fragments :: navbar"/>
+<div class="main">
+    <div th:switch="${task.getClosed()}">
+        <h1 th:case="false" th:text="'Задача #' + ${task.id}"/>
+        <h1 th:case="true" th:text="'Задача #' + ${task.id} + ' (закрыта)'"/>
+    </div>
+
+    <table class="taskInfo">
+        <thead>
+        <tr>
+            <th>Инициатор</th>
+            <th>Ответственный</th>
+            <th>Задача создана</th>
+            <th>Последний ответ</th>
+            <th>Статус</th>
+        </tr>
+        </thead>
+        <tbody>
+        <td>
+            <p th:text="${task.proponentDepartment.name}"></p>
+            <p th:text="${task.proponent.fullName}"></p>
+        </td>
+        <td>
+            <p th:text="${task.responsibleDepartment.name}"></p>
+            <p th:text="${task?.responsible?.fullName}"></p>
+        </td>
+        <td>
+            <p th:text="${#dates.format(task.dateOfCreation, 'dd.MM.yyyy HH:mm:ss')}"></p>
+        </td>
+        <td>
+            <p th:text="${#dates.format(task.lastAnswer, 'dd.MM.yyyy HH:mm:ss')}"></p>
+        </td>
+        <td>
+            <p th:text="${task.urgency.name} + ', ' + ${task.status.name} + '.'"></p>
+            <p th:text="'Дедлайн: ' + ${#dates.format(task.deadline, 'dd.MM.yyyy')}" th:if="${#dates.format(task.deadline, 'dd.MM.yyyy')} != null"></p>
+        </td>
+        </tbody>
+        <tfoot>
+        </tfoot>
+    </table>
+
+    <div class="centerButton">
+        <button id="viewLogButton">Журнал просмотров</button>
+    </div>
+
+    <div id="viewLog" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <th:block th:each="view : ${viewLog}">
+                <p th:text="${view.employee.fullName} + '&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp' + ${#dates.format(view.date, 'dd.MM.yyyy HH:mm:ss')}"></p>
+            </th:block>
+        </div>
+    </div>
+
+
+    <th:block th:each="message : ${messages}">
+        <div class="message_block">
+            <h4 th:text="${message.employee.fullName} + ' <' + ${message.employee.email} + '> :: ' + ${#dates.format(message.date, 'dd.MM.yyyy HH:mm:ss')}"></h4>
+
+            <div class="message_p">
+                <p th:text="${message?.message}"></p>
+
+                <th:block th:each="file : ${message?.getFiles()}">
+                    <a th:href="@{{taskid}/files/{fileid}(taskid=${task.id}, fileid=${file.id})}"
+                       th:text="${file.name}"></a>
+                </th:block>
+            </div>
+
+            <div class="actions">
+                <div class="actions_list">
+                    <th:block th:each="action : ${message?.action}">
+                        <th:block th:if="${action} != null">
+                            <th:block th:each="action : ${message?.action.split(';')}">
+                                <p th:text="${action}"></p>
+                            </th:block>
+                        </th:block>
+                    </th:block>
+                </div>
+
+                <div class="actions_button">
+                    <button type="button" th:data-employeeDepartment="${message.employee.department.id}"
+                            th:data-employee="${message.employee.id}"
+                            onclick="changeAnswerFields(this.getAttribute('data-employeeDepartment'), this.getAttribute('data-employee'));">
+                        <img th:src="@{/images/dialogueIcon.png}" width="17" height="17"/>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </th:block>
+
+    <div class="container">
+        <h3>Написать сообщение</h3>
+        <form th:action="@{${task.id}}" method="post" enctype="multipart/form-data">
+            <div class="row">
+                <div class="column">
+                    <ul>
+                        <li>
+                            <p class="column_p">Отдел:</p>
+                            <select th:name="responsibleDepartment" id="responsibleDepartment" required="required"
+                                    th:disabled="${task.getClosed()}">
+                                <option th:each="department : ${departments}"
+                                        th:value="${department.id}"
+                                        th:text="${department.name}"
+                                        th:selected=${department==task.responsibleDepartment}></option>
+                            </select>
+                        </li>
+                        <li>
+                            <p class="column_p">Сотрудник:</p>
+                            <select th:name="responsible" id="responsible" th:disabled="${task.getClosed()}">
+                                <option value="">- - -</option>
+                                <option th:each="employee : ${currentEmployees}"
+                                        th:value="${employee.id}"
+                                        th:text="${employee.fullName}"
+                                        th:selected=${employee==task.responsible}></option>
+                            </select>
+                        </li>
+                        <li>
+                            <p class="column_p">Статус:</p>
+                            <select th:name="status" th:disabled="${task.getClosed()}">
+                                <option th:each="st : ${status}"
+                                        th:value="${st.id}"
+                                        th:text="${st.name}"
+                                        th:selected=${st==task.status}>
+                                </option>
+                            </select>
+                        </li>
+                        <li>
+                            <input th:name="file" type="file" placeholder="Upload" class="fileUploader"
+                                   th:disabled="${task.getClosed()}"/>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="column">
+                    <ul>
+                        <li>
+                            <p class="column_p">Срочность:</p>
+                            <select th:name="urgency" required="required" datatype="" th:disabled="${task.getClosed()}">
+                                <option th:each="ur : ${urgency}"
+                                        th:value="${ur.id}"
+                                        th:text="${ur.name}"
+                                        th:selected=${ur==task.urgency}>
+
+                                </option>
+                            </select>
+                        </li>
+                        <li>
+                            <p class="column_p">Срок:</p>
+                            <input th:name="deadline" type="date" id="deadline" class="date_input"
+                                   th:attr="min=${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}"
+                                   th:disabled="${task.getClosed()}"/>
+                        </li>
+                        <li>
+                            <p>Убрать срок выполнения:</p>
+                            <input type="checkbox" name="removeDeadline" class="checkbox"
+                                   th:disabled="${task.getClosed()}"/>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="message_answer">
+                <textarea name="message" id="message" th:maxlength="2000" placeholder="Текст сообщения" th:disabled="${task.getClosed()}"></textarea>
+            </div>
+            <input type="submit" th:name="send" th:value="Отправить" id="sendButton" th:disabled="${task.getClosed()}"/>
+            <input type="submit" th:name="toggle" th:value="${task.getClosed()} ? 'Открыть задачу' : 'Закрыть задачу'"
+                   th:if="${user.getId() == task.getProponent().getId()}" id="closeTaskButton"/>
+        </form>
+    </div>
+</div>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    var employees = [[${depEmpMap}]];
+    /*]]>*/
+
+    var model = document.getElementById('viewLog');
+    var viewLogButton = document.getElementById("viewLogButton");
+    var close = document.getElementsByClassName("close")[0];
+
+    viewLogButton.onclick = function () {
+        model.style.display = "block";
+    }
+
+    close.onclick = function () {
+        model.style.display = "none";
+    }
+
+    window.onclick = function (event) {
+        if (event.target == model) {
+            model.style.display = "none";
+        }
+    }
+
+    function changeAnswerFields(department, employee) {
+        var mySelect1 = document.getElementById('responsibleDepartment');
+        var temp = department;
+
+        for (var i, j = 0; i = mySelect1.options[j]; j++) {
+            if (i.value == temp) {
+                mySelect1.selectedIndex = j;
+                break;
+            }
+        }
+        change();
+        var mySelect2 = document.getElementById('responsible');
+        var temp = employee;
+
+        for (var i, j = 0; i = mySelect2.options[j]; j++) {
+            if (i.value == temp) {
+                mySelect2.selectedIndex = j;
+                break;
+            }
+        }
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    var main = document.getElementById('responsibleDepartment');
+    var sub = document.getElementById('responsible');
+
+    function change() {
+        var selected_option = employees[main.value];
+
+        while (sub.options.length > 0) {
+            sub.options.remove(0);
+        }
+
+        let option = new Option("- - -", "");
+        sub.appendChild(option);
+
+        Object.keys(selected_option).map(function (key2, index2) {
+            let option = new Option(selected_option[key2], key2);
+            sub.appendChild(option);
+        });
+
+        Array.from(selected_option).forEach(function (el) {
+            let option = new Option(el, el);
+            sub.appendChild(option);
+        });
+    }
+
+    main.addEventListener('change', function () {
+        change();
+    });
+
+    function closeTask(value) {
+        $.ajax({
+            type: 'POST',
+            url: '/tasks/closeTask',
+            data: {
+                taskID: value
+            }
+        });
+    }
+</script>
+</body>
+</html>

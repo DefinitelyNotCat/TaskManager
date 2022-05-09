@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>TM</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/styles/style.css}"/>
+</head>
+<body>
+<div th:replace="fragments :: navbar"></div>
+<div class="container">
+    <h1>Добавить сотрудника</h1>
+    <div th:if="${message != null}">
+        <p th:text="${message}" class="message"></p>
+    </div>
+
+    <form action="#" th:action="@{/newEmployee}" th:object="${employee}" method="post">
+        <div class="row">
+            <div class="column">
+                <ul>
+                    <li>
+                        <p class="column_p">ФИО:</p>
+                        <input type="text" th:field="*{fullName}" class="column_text_input"
+                               placeholder="ФИО сотрудника" th:maxlength="100" required="required">
+                        <span th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}"></span>
+                    </li>
+                    <li>
+                        <p class="column_p">Логин:</p>
+                        <input type="text" th:field="*{login}" class="column_text_input" placeholder="Логин" th:maxlength="20" required="required">
+                        <span th:if="${#fields.hasErrors('login')}" th:errors="*{login}"></span>
+                    </li>
+                    <li>
+
+                        <p class="column_p">Пароль:</p>
+                        <input type="password" th:field="*{password}" class="column_text_input" placeholder="Пароль" th:maxlength="20" required="required">
+                        <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
+                    </li>
+                </ul>
+            </div>
+            <div class="column">
+                <ul>
+                    <li>
+                        <p class="column_p">Почта: </p>
+                        <input type="email" th:field="*{email}" class="column_text_input" placeholder="Почта" th:maxlength="120" required="required">
+                        <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+                    </li>
+                    <li>
+                        <p class="column_p">Доступ:</p>
+                        <select th:field="*{userAccess}" id="userAccess" required="required">
+                            <option th:each="u : ${userAccess}"
+                                    th:value="${u.id}"
+                                    th:text="${u.name}"></option>
+                        </select>
+                    </li>
+                    <li>
+                        <p class="column_p">Отдел:</p>
+                        <select th:field="*{department}" id="department" required="required">
+                            <option th:each="d : ${department}"
+                                    th:value="${d.id}"
+                                    th:text="${d.name}"></option>
+                        </select>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <input type="submit" value="Добавить" id="createButton">
+    </form>
+</div>
+</body>
+</html>
