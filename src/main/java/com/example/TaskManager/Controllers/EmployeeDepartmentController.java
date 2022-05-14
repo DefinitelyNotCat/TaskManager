@@ -48,7 +48,7 @@ public class EmployeeDepartmentController {
     //Добавить сотрудника
     @GetMapping(path = "/newEmployee")
     public String newEmployee(@RequestParam(value = "message", defaultValue = "") String message, Model model, Employee employee) {
-        if (!employeeService.getCurrentEmployee().getUserAccess().getId().equals(4)) {
+        if (!employeeService.getCurrentEmployee().getUserAccess().getId().equals(3)) {
             return myErrorController.handleError(null, model);
         }
 
@@ -95,7 +95,6 @@ public class EmployeeDepartmentController {
         switch (user.getUserAccess().getId()) {
             case 1:
             case 2:
-            case 3:
                 if (!user.getDepartment().getId().equals(id))
                     return myErrorController.handleError(null, model);
                 break;
@@ -124,6 +123,32 @@ public class EmployeeDepartmentController {
         employeeService.saveEmployee(employee);
     }
 
+    //Изменить пароль
+    @PostMapping(path = "/Profile/{id}/changePassword")
+    @ResponseBody
+    public ModelAndView changePassword(@PathVariable("id") Long id, @RequestParam(value = "password") String newPassword) {
+        Employee employee = employeeService.getEmployeeById(id);
+        employee.setPassword(newPassword);
+        employeeService.saveEmployee(employee);
+        return new ModelAndView("redirect:/Profile/" + id);
+    }
+
+    //Все отделы
+    @GetMapping(path = "/allDepartments")
+    public String allDepartments(Model model) {
+        model.addAttribute("user", employeeService.getCurrentEmployee());
+        model.addAttribute("departments", departmentService.getDepartment());
+        return "departments";
+    }
+
+    //Все сотрудники
+    @GetMapping(path = "/allEmployees")
+    public String allEmployees(Model model) {
+        model.addAttribute("user", employeeService.getCurrentEmployee());
+        model.addAttribute("employees", employeeService.getAll());
+        return "employees";
+    }
+
     //Мой профиль
     @GetMapping(path = "/myProfile")
     public ModelAndView myProfile() {
@@ -137,11 +162,10 @@ public class EmployeeDepartmentController {
 
         switch (user.getUserAccess().getId()) {
             case 1:
-            case 2:
                 if (!user.getId().equals(id))
                     return myErrorController.handleError(null, model);
                 break;
-            case 3:
+            case 2:
                 if (!user.getId().equals(id) && !employeeService.getEmployeeById(id).getDepartment().getId().equals(user.getDepartment().getId()))
                     return myErrorController.handleError(null, model);
                 break;

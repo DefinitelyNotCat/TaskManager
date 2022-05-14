@@ -53,8 +53,10 @@ Login Form
     justify-content: center;
     flex-direction: column;
     position: absolute;
-    top: 0; left: 0;
-    height: 100%; width: 100%;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
 
     background: linear-gradient(
             #CCCCCC,
@@ -120,7 +122,7 @@ Navigation Bar
     cursor: pointer;
 }
 
-header{
+header {
     z-index: 999;
     top: 0;
     left: 0;
@@ -133,7 +135,7 @@ header{
     font-family: "Poppins", sans-serif;
 }
 
-header .logo{
+header .logo {
     color: #EEEEEE;
     font-size: 1.8em;
     font-weight: 700;
@@ -142,17 +144,17 @@ header .logo{
     letter-spacing: 2px;
 }
 
-header .navigation{
+header .navigation {
     position: relative;
     line-height: 60px;
     transition-property: line-height;
 }
 
-header.sticky .navigation{
+header.sticky .navigation {
     line-height: 60px;
 }
 
-header .navigation .menu{
+header .navigation .menu {
     position: relative;
     display: flex;
     justify-content: center;
@@ -160,7 +162,7 @@ header .navigation .menu{
     user-select: none;
 }
 
-.menu-item > a{
+.menu-item > a {
     color: #EEEEEE;
     font-size: 1em;
     text-decoration: none;
@@ -168,12 +170,12 @@ header .navigation .menu{
     padding: 25px 0;
 }
 
-.menu-item > a:hover{
+.menu-item > a:hover {
     color: #469DFF;
     transition: 0.2s;
 }
 
-.menu-item .sub-menu{
+.menu-item .sub-menu {
     position: absolute;
     background: #333333;
     top: 59px;
@@ -185,42 +187,42 @@ header .navigation .menu{
     opacity: 0;
     transition: 0.1s;
     transition-property: transform, opacity;
-    z-index:998;
+    z-index: 998;
 }
 
-header.sticky .menu-item .sub-menu{
+header.sticky .menu-item .sub-menu {
     top: 60px;
 }
 
-.menu-item:hover .sub-menu{
+.menu-item:hover .sub-menu {
     pointer-events: all;
     transform: translateY(0);
     opacity: 1;
 }
 
-.menu-item .sub-menu .sub-item{
+.menu-item .sub-menu .sub-item {
     position: relative;
     padding: 7px 0;
     cursor: pointer;
     box-shadow: inset 0px -30px 5px -30px rgba(255, 255, 255, 0.2);
 }
 
-.menu-item .sub-menu .sub-item a{
+.menu-item .sub-menu .sub-item a {
     color: #EEEEEE;
     font-size: 1em;
     text-decoration: none;
     padding: 15px 30px;
 }
 
-.menu-item .sub-menu .sub-item:hover{
+.menu-item .sub-menu .sub-item:hover {
     background: #4080EF;
 }
 
-.menu-item .sub-menu .sub-item:last-child:hover{
+.menu-item .sub-menu .sub-item:last-child:hover {
     border-radius: 0 0 8px 8px;
 }
 
-.more .more-menu{
+.more .more-menu {
     position: absolute;
     background: #333333;
     list-style: none;
@@ -236,23 +238,23 @@ header.sticky .menu-item .sub-menu{
     transition-property: transform, opacity;
 }
 
-.more:hover .more-menu{
+.more:hover .more-menu {
     pointer-events: all;
     transform: translateY(0);
     opacity: 1;
 }
 
-.more .more-menu .more-item{
+.more .more-menu .more-item {
     padding: 7px 0;
     box-shadow: inset 0px -30px 5px -30px rgba(255, 255, 255, 0.2);
     transition: 0.3s;
 }
 
-.more .more-menu .more-item:hover{
+.more .more-menu .more-item:hover {
     background: #4080EF;
 }
 
-.menu-btn{
+.menu-btn {
     display: none;
     text-align: center;
 }
@@ -321,7 +323,7 @@ Container
     padding-right: 10px;
 }
 
-.column li p{
+.column li p {
     margin-left: 50px;
 }
 
@@ -380,10 +382,22 @@ Table
     margin-right: auto;
 }
 
-.departmentTasksTable {
+.viewLogTable {
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: white;
+}
+
+.departmentTasksTable, .allTable {
     width: 70%;
     margin-left: auto;
     margin-right: auto;
+}
+
+.allTable h2 {
+    padding-bottom: 0px;
+    padding-top: 30px;
 }
 
 .chartDepartment {
@@ -454,13 +468,13 @@ Button
 
 .actions_button {
     display: inline-block;
-    position:absolute;
+    position: absolute;
     bottom: 0;
     right: 0;
     padding-right: 5px;
 }
 
-.actions_button button{
+.actions_button button {
     border: none;
     cursor: pointer;
 }
@@ -474,6 +488,16 @@ Button
     margin-top: 10px;
     margin-bottom: 10px;
     padding: 1px 3px;
+    font-size: 16px;
+    font-family: "Poppins", sans-serif;
+    color: #333333;
+}
+
+.changePasswordButton {
+    margin-left: 10px;
+    padding: 1px 3px;
+    width: 100px;
+    height: 40px;
     font-size: 16px;
     font-family: "Poppins", sans-serif;
     color: #333333;
@@ -499,7 +523,7 @@ Button
     color: #333333;
 }
 
-#toggleNotification {
+#toggleNotification, #changePasswordButton {
     margin: 0px;
     padding: 1px 3px;
     font-size: 16px;
@@ -525,14 +549,25 @@ Modal
 }
 
 .modal-content {
-    background-color: #fefefe;
+    background: linear-gradient(
+            #f5f5f5,
+            #fafafa
+    );
     margin: auto;
-    padding: 20px;
+    padding: 0px 5px 20px 20px;
     border: 1px solid #888;
-    width: 40%;
+    min-width: 750px;
+    max-width: 850px;
 }
 
-.modal-content p{
+.modal-content h3 {
+    margin: auto;
+    padding-top: 20px;
+    padding-bottom: 11px;
+    font-size: 23px;
+}
+
+.modal-content p {
     margin: auto;
     padding: 9px;
 }
@@ -542,6 +577,7 @@ Modal
     float: right;
     font-size: 28px;
     font-weight: bold;
+    font-family: "Poppins", sans-serif;
 }
 
 .close:hover, .close:focus {
@@ -603,12 +639,12 @@ Messages
     padding: 0px 20px 0px 20px;
 }
 
-.message_p a{
+.message_p a {
     text-decoration: none;
     color: grey;
 }
 
-.message_p a:hover{
+.message_p a:hover {
     color: #23252B;
 }
 
@@ -670,17 +706,25 @@ option {
 }
 
 option:focus {
-     outline: none;
- }
+    outline: none;
+}
 
 option::-ms-expand {
-     display: none;
- }
+    display: none;
+}
+
+.form-control {
+    flex: 1;
+    padding: 1em;
+    border: 0;
+    color: #4d4a4a;
+    font-size: 1rem;
+}
 
 /*-----------------
 Errors
  ----------------*/
-#main{
+#main {
     display: table;
     width: 100%;
     height: 100%;
@@ -690,19 +734,19 @@ Errors
     margin: 0;
 }
 
-.fof{
+.fof {
     display: table-cell;
     vertical-align: middle;
 }
 
-.fof h1{
+.fof h1 {
     margin-top: 20%;
     font-size: 50px;
     display: inline-block;
     padding: 0px;
 }
 
-.fof p{
+.fof p {
     font-size: 20px;
     padding: 0px;
 }

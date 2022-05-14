@@ -52,7 +52,8 @@
                     <li th:text="${employee.fullName}"></li>
                     <li th:text="${employee.getActiveStatus()} ? 'Да' : 'Нет'"></li>
                     <li th:text="${employee.email}"></li>
-                    <li th:text="${employee.getNotificationStatus()} ? 'Включены' : 'Отключены'" id="liNotification"></li>
+                    <li th:text="${employee.getNotificationStatus()} ? 'Включены' : 'Отключены'"
+                        id="liNotification"></li>
                     <li th:text="${employee.userAccess.name}"></li>
                     <li th:text="${employee.department.name}"></li>
                 </ul>
@@ -64,10 +65,60 @@
            th:value="${employee.getNotificationStatus()} ? 'Отключить уведомления на почту' : 'Включить уведомления на почту'"
            th:if="${user.getId() == employee.getId()}"
            th:onclick="'javascript:toggleNotification(\'' + ${employee.id} + '\');'" id="toggleNotification"/>
+    <input type="button" th:name="changePassword"
+           th:value="'Изменить пароль'"
+           th:if="${user.getId() == employee.getId() || user.getUserAccess().getId().equals(3)}"
+           th:onclick="'javascript:toggleNotification(\'' + ${employee.id} + '\');'" id="changePasswordButton"/>
+</div>
+
+<div id="changePassword" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h3 th:text="'Изменить пароль'"></h3>
+
+        <form th:action="@{/Profile/{employeeId}/changePassword(employeeId=${employee.getId()})}" method="post">
+            <input type="hidden" name="token" th:value="${token}"/>
+            <div class="border border-secondary rounded p-3">
+                <div>
+                    <input type="password" name="password" id="password" class="form-control" th:maxlength="10"
+                           placeholder="Новый пароль" required autofocus/>
+                    <input type="password" class="form-control" placeholder="Повторите пароль" th:maxlength="10"
+                           required oninput="checkPasswordMatch(this);"/>
+                    <input type="submit" value="Изменить" class="changePasswordButton"/>
+                </div>
+            </div>
+        </form>
+    </div>
 </div>
 
 <div id="chart_div"></div>
 <script th:inline="javascript">
+    var model = document.getElementById('changePassword');
+    var changePasswordButton = document.getElementById("changePasswordButton");
+    var close = document.getElementsByClassName("close")[0];
+
+    changePasswordButton.onclick = function () {
+        model.style.display = "block";
+    }
+
+    close.onclick = function () {
+        model.style.display = "none";
+    }
+
+    window.onclick = function (event) {
+        if (event.target == model) {
+            model.style.display = "none";
+        }
+    }
+
+    function checkPasswordMatch(fieldConfirmPassword) {
+        if (fieldConfirmPassword.value != $("#password").val()) {
+            fieldConfirmPassword.setCustomValidity("Пароль не совпадает");
+        } else {
+            fieldConfirmPassword.setCustomValidity("");
+        }
+    }
+
     var real_data = /*[[${chartData}]]*/'noValue';
     google.charts.load('current', {'packages': ['corechart']});
     google.charts.setOnLoadCallback(drawChart);

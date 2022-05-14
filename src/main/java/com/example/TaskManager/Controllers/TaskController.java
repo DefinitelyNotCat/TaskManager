@@ -291,6 +291,10 @@ public class TaskController {
     //Создание новой задачи
     @GetMapping(path = "/add")
     public String add(Model model) {
+        if (employeeService.getCurrentEmployee().getUserAccess().getId().equals(1)) {
+            return myErrorController.handleError(null, model);
+        }
+
         Map<Integer, Map<Long, String>> depEmpMap = employeeService.mapDepartmentsAndEmployees();
 
         model.addAttribute("departments", departmentService.getDepartment());

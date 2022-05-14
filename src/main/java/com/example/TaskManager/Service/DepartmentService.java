@@ -24,7 +24,5 @@ public class DepartmentService {
         return departmentRepository.getDepartmentById(id);
     }
 
-    /*public List<Employee> getEmployees(Department department) {
-        return departmentRepository.getEmployeesByDepartment(department.getId());
-    }*/
+
 }

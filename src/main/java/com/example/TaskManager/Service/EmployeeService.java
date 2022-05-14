@@ -64,6 +64,10 @@ public class EmployeeService implements UserDetailsService {
         return user;
     }
 
+    public List<Employee> getAll() {
+        return employeeRepository.findAll();
+    }
+
     public Employee getEmployeeByEmail(String email) {
         return employeeRepository.findEmployeeByEmail(email);
     }

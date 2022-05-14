@@ -40,7 +40,8 @@
         </td>
         <td>
             <p th:text="${task.urgency.name} + ', ' + ${task.status.name} + '.'"></p>
-            <p th:text="'Дедлайн: ' + ${#dates.format(task.deadline, 'dd.MM.yyyy')}" th:if="${#dates.format(task.deadline, 'dd.MM.yyyy')} != null"></p>
+            <p th:text="'Дедлайн: ' + ${#dates.format(task.deadline, 'dd.MM.yyyy')}"
+               th:if="${#dates.format(task.deadline, 'dd.MM.yyyy')} != null"></p>
         </td>
         </tbody>
         <tfoot>
@@ -54,9 +55,22 @@
     <div id="viewLog" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
-            <th:block th:each="view : ${viewLog}">
+            <h3 th:text="'Журнал просмотров'"></h3>
+
+            <div class="viewLogTable">
+                <table class="table">
+                    <tbody>
+                    <tr th:each="view: ${viewLog}">
+                        <td th:text="${view.employee.fullName}"></td>
+                        <td th:text="${#dates.format(view.date, 'dd.MM.yyyy HH:mm:ss')}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!--<th:block th:each="view : ${viewLog}">
                 <p th:text="${view.employee.fullName} + '&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp' + ${#dates.format(view.date, 'dd.MM.yyyy HH:mm:ss')}"></p>
-            </th:block>
+            </th:block>-->
         </div>
     </div>
 
@@ -169,7 +183,8 @@
             </div>
 
             <div class="message_answer">
-                <textarea name="message" id="message" th:maxlength="2000" placeholder="Текст сообщения" th:disabled="${task.getClosed()}"></textarea>
+                <textarea name="message" id="message" th:maxlength="2000" placeholder="Текст сообщения"
+                          th:disabled="${task.getClosed()}"></textarea>
             </div>
             <input type="submit" th:name="send" th:value="Отправить" id="sendButton" th:disabled="${task.getClosed()}"/>
             <input type="submit" th:name="toggle" th:value="${task.getClosed()} ? 'Открыть задачу' : 'Закрыть задачу'"
