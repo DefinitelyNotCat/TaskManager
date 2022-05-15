@@ -188,7 +188,7 @@
             </div>
             <input type="submit" th:name="send" th:value="Отправить" id="sendButton" th:disabled="${task.getClosed()}"/>
             <input type="submit" th:name="toggle" th:value="${task.getClosed()} ? 'Открыть задачу' : 'Закрыть задачу'"
-                   th:if="${user.getId() == task.getProponent().getId()}" id="closeTaskButton"/>
+                   th:if="${user.getId() == task.getProponent().getId() || user.getUserAccess().getId() == 3}" id="closeTaskButton"/>
         </form>
     </div>
 </div>

@@ -266,7 +266,7 @@ public class TaskController {
         Date out = Date.from(ldt.atZone(ZoneId.systemDefault()).toInstant());
         String action = "";
 
-        if (task.getProponent().getId().equals(employeeService.getCurrentEmployee().getId())) {
+        if (task.getProponent().getId().equals(employeeService.getCurrentEmployee().getId()) || employeeService.getCurrentEmployee().getUserAccess().getId().equals(3)) {
             if (task.getStatus().getId() != 3) {
                 action += "Изменен статус: " + statusService.getStatusById(3).getName() + ";";
                 task.setStatus(statusService.getStatusById(3));
