@@ -15,7 +15,7 @@
                     <ul class="sub-menu">
                         <li class="sub-item"><a href="/tasks/myTasks">Мои задачи</a></li>
                         <li class="sub-item"><a href="/tasks/all">Все задачи</a></li>
-                        <li class="sub-item"><a href="/tasks/add">Создать задачу</a></li>
+                        <li class="sub-item"><a href="/tasks/add" th:if="${user.getUserAccess().id} != 1">Создать задачу</a></li>
                     </ul>
                 </li>
 
