@@ -11,7 +11,7 @@ import java.util.List;
 @Repository
 public interface TaskRepository extends JpaRepository<Task, Long> {
 
-    @Query(value = "SELECT * FROM TASK WHERE TK_ID LIKE (CASE WHEN :id LIKE '%%' THEN :id ELSE '%%' END ) AND TK_STATUS LIKE %:status% AND TK_URGENCY LIKE %:urgency% AND TK_PR_DEP LIKE %:proponentDepartment% AND TK_RES_DEP LIKE %:responsibleDepartment% ORDER BY TK_LAST_ANSWER DESC", nativeQuery = true)
+    @Query(value = "SELECT * FROM TASK WHERE TK_ID LIKE (CASE WHEN :id IS NOT NULL THEN :id ELSE '%%' END) AND TK_STATUS LIKE %:status% AND TK_URGENCY LIKE %:urgency% AND TK_PR_DEP LIKE %:proponentDepartment% AND TK_RES_DEP LIKE %:responsibleDepartment% ORDER BY TK_LAST_ANSWER DESC", nativeQuery = true)
     List<Task> findByFilter(String id, String urgency, String status, String proponentDepartment, String responsibleDepartment);
 
     @Query(value = "SELECT * FROM (SELECT * FROM TASK ORDER BY TK_DATE_OF_CREATION DESC) WHERE ROWNUM = 1", nativeQuery = true)
