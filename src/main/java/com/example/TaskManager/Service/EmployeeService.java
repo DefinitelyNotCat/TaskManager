@@ -75,7 +75,11 @@ public class EmployeeService implements UserDetailsService {
     @Transactional
     public void saveEmployee(Employee employee) {
         employee.setPassword(passwordEncoder.encode(employee.getPassword()));
+        employeeRepository.save(employee);
+    }
 
+    @Transactional
+    public void updateEmployee(Employee employee) {
         employeeRepository.save(employee);
     }
 

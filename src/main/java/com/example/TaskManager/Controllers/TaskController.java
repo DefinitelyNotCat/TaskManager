@@ -118,7 +118,7 @@ public class TaskController {
     //Добавить задачу в избранное
     @PostMapping(path = "/toggleFavorites")
     @ResponseBody
-    public void postResponseController(@RequestParam(value = "taskId") Long taskId) {
+    public void toggleFavorites(@RequestParam(value = "taskId") Long taskId) {
         Employee user = employeeService.getCurrentEmployee();
         List<Favorites> favoritesList = favoritesService.getFavoritesByEmployee(user.getId());
         Favorites favorites = new Favorites(new FavoritesCompositePK(user, taskService.getTasksById(taskId)));

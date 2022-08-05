@@ -117,10 +117,10 @@ public class EmployeeDepartmentController {
     //Включить\отключить уведомления на почту
     @PostMapping(path = "/Profile/toggleNotification")
     @ResponseBody
-    public void postResponseController(@RequestParam(value = "employeeId") Long employeeId) {
+    public void toggleNotification(@RequestParam(value = "employeeId") Long employeeId) {
         Employee employee = employeeService.getEmployeeById(employeeId);
         employee.setNotification(employee.getNotificationStatus() ? 'N' : 'Y');
-        employeeService.saveEmployee(employee);
+        employeeService.updateEmployee(employee);
     }
 
     //Изменить пароль
