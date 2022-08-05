@@ -33,5 +33,4 @@ build/
 .vscode/
 
 ### Sensitive Data ###
-src/main/java/com/example/TaskManager/Configs/MailConfig.java
-src/main/resources/application.properties
+src/main/resources/env.properties
